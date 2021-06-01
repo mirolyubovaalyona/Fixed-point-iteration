@@ -1,56 +1,51 @@
+import numpy as np
 
-# Fixed Point Iteration Method
-# Importing math to use sqrt function
-import math
 
-def f(x):
-    return x*x*x + x*x -1
+n = int(input('Количество неизвестных: '))
+k = int(input('Количество итераций: '))
 
-# Re-writing f(x)=0 to x = g(x)
-def g(x):
-    return 1/math.sqrt(1+x)
+a = np.zeros((n,n))
+b = np.zeros(n)
 
-# Implementing Fixed Point Iteration Method
-def fixedPointIteration(x0, e, N):
-    print('\n\n*** FIXED POINT ITERATION ***')
-    step = 1
-    flag = 1
-    condition = True
-    while condition:
-        x1 = g(x0)
-        print('Iteration-%d, x1 = %0.6f and f(x1) = %0.6f' % (step, x1, f(x1)))
-        x0 = x1
+a= [[20, 2, 3, 7],
+[1, 12, -2, -5],
+[5, -3, 13, 0],
+[0, 0, -3, 15]]
 
-        step = step + 1
+b=[5, 4, -3, 7]
+
+#for i in range(n):
+#   for j in range(n):
+#        a[i][j] = float(input( 'a['+str(i)+']['+ str(j)+']='))
+#
+#for i in range(n):
+#        b[i] = float(input( 'b['+str(i)+']='))
+
+
+def f(n, a, b, k):
+    x = np.zeros(n)
+    xx=x
+
+    for i in range(k):
+        for j in range(n):
+            xx[j]=b[j]
+            for l in range(j):
+                xx[j]-=x[l]*a[j][l]
+            for l in range(j+1, n):
+                xx[j]-=x[l]*a[j][l]
+            xx[j]=xx[j]/a[j][j]
+            x=xx
+        print(x)
+    
         
-        if step > N:
-            flag=0
-            break
-        
-        condition = abs(f(x1)) > e
+    return x
 
-    if flag==1:
-        print('\nRequired root is: %0.8f' % x1)
-    else:
-        print('\nNot Convergent.')
+x=f(n, np.array(a), np.array(b), k)
 
-# Input Section
-x0 = input('Enter Guess: ')
-e = input('Tolerable Error: ')
-N = input('Maximum Step: ')
+# Displaying solution
+print('Теперь известные элементы: ')
+for i in range(n):
+    print('X%d = %0.2f' %(i,x[i]), end = '\t')
+print('\n')
+print(np.linalg.solve(a, b))
 
-# Converting x0 and e to float
-x0 = float(x0)
-e = float(e)
-
-# Converting N to integer
-N = int(N)
-
-
-#Note: You can combine above three section like this
-# x0 = float(input('Enter Guess: '))
-# e = float(input('Tolerable Error: '))
-# N = int(input('Maximum Step: '))
-
-# Starting Newton Raphson Method
-fixedPointIteration(x0,e,N)
